@@ -1,5 +1,6 @@
 import home from "../assets/home.png";
 import { ImFacebook2 } from "react-icons/im";
+import {Link} from "react-router-dom";
 
 const Home = () => {
   return (
@@ -46,9 +47,9 @@ const Home = () => {
                 </p>
               </div>
               <div className="flex justify-center items-center">
-                <p>
+                <Link to="/forgot-password">
                   Forgot Password?
-                </p>
+                </Link>
               </div>
             </form>
             </div>
@@ -56,7 +57,7 @@ const Home = () => {
               <p>
                 Don't have an account? 
               </p>
-              <p className="ml-2 text-blue-400">Sign Up</p>
+              <Link to="/sign-up" className="ml-2 text-blue-400">Sign Up</Link>
             </div>
         </div>
     </div>
