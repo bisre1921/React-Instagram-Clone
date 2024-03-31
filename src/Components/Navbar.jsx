@@ -1,4 +1,6 @@
 import {Link} from "react-router-dom";
+import SignIn from "../Pages/SignIn";
+import SignUp from "../Pages/SignUp";
 
 const Navbar = () => {
   return (
@@ -15,12 +17,16 @@ const Navbar = () => {
             </div>
             <div>
                 <ul className="flex gap-8">
-                    <li className="cursor-pointer">
-                        Sign In
-                    </li>
-                    <li className="cursor-pointer">
-                        Sign Up
-                    </li>
+                    <Link to="/sign-in" element={<SignIn />}>
+                        <li className="cursor-pointer">
+                            Sign In
+                        </li>
+                    </Link>
+                    <Link to="/sign-up" element={<SignUp />}>
+                        <li className="cursor-pointer">
+                            Sign Up
+                        </li>
+                    </Link>
                 </ul>
             </div> 
         </nav>

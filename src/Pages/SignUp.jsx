@@ -56,7 +56,7 @@ const SignUp = () => {
           <p>
             have an account? 
           </p>
-          <Link to="/sign-in" className="ml-2 text-blue-400">Sign in</Link>
+          <Link to="/sign-in" className="ml-2 text-blue-400">Log in</Link>
         </div>
       </div>
     </div>

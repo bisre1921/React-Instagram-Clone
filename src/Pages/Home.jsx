@@ -40,12 +40,12 @@ const Home = () => {
                   OR
                   </p>
               </div>
-              <div className="flex items-center justify-center gap-2 text-blue-400 mb-6">
+              <button className="flex items-center justify-center gap-2 text-blue-400 mb-6">
                 <ImFacebook2 />
                 <p>
                   Log in with Facebook
                 </p>
-              </div>
+              </button>
               <div className="flex justify-center items-center">
                 <Link to="/forgot-password">
                   Forgot Password?
