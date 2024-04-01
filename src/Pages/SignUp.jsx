@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { ImFacebook2 } from "react-icons/im";
 import { Link } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { db } from "../firebase";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 const SignUp = () => {
   const [signUpFormData , setSignUpFormData] = useState({
@@ -26,7 +27,17 @@ const SignUp = () => {
     try {
       const auth = getAuth();
       const userCredential =  await createUserWithEmailAndPassword(auth , email , password);
+      updateProfile(auth.currentUser , {
+        displayName : userName
+      })
       console.log(userCredential);
+      const user = userCredential.user;
+      const signUpFormDataCopy = {...signUpFormData};
+      delete signUpFormDataCopy.password;
+      signUpFormDataCopy.timestamp = serverTimestamp();
+      const docRef = doc(db , "Users" , user.uid);
+      await setDoc(docRef , signUpFormDataCopy);
+      console.log("successfully registered")
     } catch (error) {
       console.log(error);
     }
