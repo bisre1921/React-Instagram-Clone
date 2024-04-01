@@ -1,21 +1,57 @@
 import { ImFacebook2 } from "react-icons/im";
 import { Link } from "react-router-dom";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useState } from "react";
 
 const SignIn = () => {
+
+  const [signInFormData , setSignInFormData] = useState({
+    email : "" ,
+    password : "" ,
+  });
+  const {email , password} = signInFormData;
+
+  const handleSignInFormInputChange = (event) => {
+    setSignInFormData((prevState) => ({
+      ...prevState , 
+      [event.target.id] : event.target.value
+  }));
+  };
+
+  const handleSignInFormSubmit = async(event) => {
+    event.preventDefault();
+    try {
+      const auth = getAuth();
+      const userCredential = signInWithEmailAndPassword(auth, email, password);
+      if(userCredential) {
+        console.log("sign in")
+      } else {
+        console.log("error")
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
   return (
     <div className="bg-zinc-200 ">
       <div className=" flex flex-col justify-start items-center h-svh pt-20  max-w-2xl mx-auto bg-black text-white pb-32 md:pb-10">
         <div className="max-w-md w-[300px] border p-4 flex flex-col items-center justify-start mx-8">
           <h1 className="mb-10">Instagram</h1>
-          <form action="">
+          <form onSubmit={handleSignInFormSubmit}>
             <input
               type="text"
               placeholder="email..."
+              id="email"
+              onChange={handleSignInFormInputChange}
               className="p-2 rounded mb-2 w-full mr-4 text-black"
             />
             <input
               type="password"
               placeholder="password..."
+              id="password"
+              onChange={handleSignInFormInputChange}
               className="p-2 rounded w-full mr-4 text-black mb-6"
             />
             <div>
