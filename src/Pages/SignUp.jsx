@@ -1,7 +1,40 @@
+import { useState } from "react";
 import { ImFacebook2 } from "react-icons/im";
 import { Link } from "react-router-dom";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { db } from "../firebase";
 
 const SignUp = () => {
+  const [signUpFormData , setSignUpFormData] = useState({
+    email : "" , 
+    fullName : "" , 
+    userName : "" ,
+    password : "" ,
+  });
+  const {email , fullName , userName , password} = signUpFormData;
+
+  const handleSignUpFormInputChange = (event) => {
+    setSignUpFormData((prevState) => ({
+      ...prevState , 
+      [event.target.id] : event.target.value
+  }));
+  };
+
+
+  const handleSignUpFormSubmit = async(event) => {
+    event.preventDefault();
+    try {
+      const auth = getAuth();
+      const userCredential =  await createUserWithEmailAndPassword(auth , email , password);
+      console.log(userCredential);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+ 
+
+
   return (
     <div className="bg-zinc-200 ">
       <div className=" flex flex-col justify-start items-center pt-10  max-w-2xl mx-auto bg-black text-white pb-32 md:pb-10">
@@ -19,25 +52,37 @@ const SignUp = () => {
             <p className="mx-4 text-center mb-4">OR</p>
             <div className="border-t border-gray-300 w-full my-4"></div>
           </div>
-          <form action="">
+          <form onSubmit={handleSignUpFormSubmit}>
             <input
               type="text"
               placeholder="email..."
+              id="email"
+              value={email}
+              onChange={handleSignUpFormInputChange}
               className="p-2 rounded mb-2 w-full mr-4 text-black"
             />
             <input
               type="text"
               placeholder="Full Name..."
+              id="fullName"
+              value={fullName}
+              onChange={handleSignUpFormInputChange}
               className="p-2 rounded mb-2 w-full mr-4 text-black"
             />
             <input
               type="text"
               placeholder="Username..."
+              id="userName"
+              value={userName}
+              onChange={handleSignUpFormInputChange}
               className="p-2 rounded mb-2 w-full mr-4 text-black"
             />
             <input
               type="password"
               placeholder="password..."
+              id="password"
+              value={password}
+              onChange={handleSignUpFormInputChange}
               className="p-2 rounded w-full mr-4 text-black mb-6"
             />
             <div className="flex items-center justify-center">
