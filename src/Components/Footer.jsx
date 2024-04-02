@@ -9,7 +9,7 @@ const Footer = () => {
     const auth = getAuth();
 
     return (
-        <div className="fixed bottom-0 w-full text-white bg-black flex justify-between px-4 pb-1">
+        <div className="sticky bottom-0 w-full text-white bg-black flex justify-between  px-4 pb-1 max-w-2xl mx-auto">
             <IoMdHome className="font-bold text-3xl" />
             <FaSearch className="font-bold text-3xl" />
             <FaRegPlusSquare className="font-bold text-3xl" />
