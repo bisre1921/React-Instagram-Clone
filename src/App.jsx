@@ -7,12 +7,27 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import FrontPage from "./Pages/FrontPage";
 import Home from "./Pages/Home";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useEffect, useState } from "react";
 
 const  App = () => {
+  const auth = getAuth();
+  const [loggedIn , setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    onAuthStateChanged(auth , (user) => {
+      if(user) {
+        setLoggedIn(true);
+      } else {
+        setLoggedIn(false);
+      }
+    })
+  } , []);
+
   return (
     <div>
       <Router>
-        <Navbar />
+        <Navbar loggedIn={loggedIn} />
         <Routes>
           <Route path="/" element={<FrontPage />} />
           <Route path="/home" element={<Home />} />
