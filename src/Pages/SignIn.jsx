@@ -1,7 +1,9 @@
 import { ImFacebook2 } from "react-icons/im";
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
+import {toast} from "react-toastify";
+import Loading from "../Components/Loading";
 
 const SignIn = () => {
 
@@ -10,6 +12,8 @@ const SignIn = () => {
     password : "" ,
   });
   const {email , password} = signInFormData;
+
+  const [loading , setLoading] = useState(false);
 
   const handleSignInFormInputChange = (event) => {
     setSignInFormData((prevState) => ({
@@ -21,19 +25,24 @@ const SignIn = () => {
   const handleSignInFormSubmit = async(event) => {
     event.preventDefault();
     try {
+      setLoading(true);
       const auth = getAuth();
-      const userCredential = signInWithEmailAndPassword(auth, email, password);
-      if(userCredential) {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      if(userCredential.user) {
         console.log("sign in")
+        toast.success("logged in")
       } else {
         console.log("error")
       }
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      toast.error("Invalid email or password. Please check your credentials and try again.")
     }
   }
 
-
+  if(loading) {
+    <Loading />
+  }
   return (
     <div className="bg-zinc-200 ">
       <div className=" flex flex-col justify-start items-center h-svh pt-20  max-w-2xl mx-auto bg-black text-white pb-32 md:pb-10">
