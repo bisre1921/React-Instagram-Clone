@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ImFacebook2 } from "react-icons/im";
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { db } from "../firebase";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
@@ -17,6 +17,8 @@ const SignUp = () => {
   const {email , fullName , userName , password} = signUpFormData;
 
   const [loading , setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSignUpFormInputChange = (event) => {
     setSignUpFormData((prevState) => ({
@@ -44,6 +46,7 @@ const SignUp = () => {
       await setDoc(docRef , signUpFormDataCopy);
       setLoading(false);
       toast.success("User created successfully");
+      navigate("/home");
     } catch (error) {
       toast.error("Error creating user. please try again");
     }

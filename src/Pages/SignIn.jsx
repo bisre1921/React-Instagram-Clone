@@ -15,6 +15,8 @@ const SignIn = () => {
 
   const [loading , setLoading] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleSignInFormInputChange = (event) => {
     setSignInFormData((prevState) => ({
       ...prevState , 
@@ -29,10 +31,7 @@ const SignIn = () => {
       const auth = getAuth();
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       if(userCredential.user) {
-        console.log("sign in")
-        toast.success("logged in")
-      } else {
-        console.log("error")
+        navigate("/home");
       }
     } catch (error) {
       setLoading(false);
