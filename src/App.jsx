@@ -1,5 +1,6 @@
 import {BrowserRouter as Router , Routes , Route} from "react-router-dom";
 import Navbar from "./Components/Navbar";
+import Footer from "./Components/Footer";
 import ForgotPassword from "./Pages/ForgotPassword";
 import SignUp from "./Pages/SignUp";
 import SignIn from "./Pages/SignIn";
@@ -35,6 +36,9 @@ const  App = () => {
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/sign-in" element={<SignIn />} />
         </Routes>
+        {loggedIn && (
+          <Footer />
+        )}
       </Router>
       <ToastContainer
         position="top-center"
