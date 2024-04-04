@@ -10,6 +10,7 @@ import FrontPage from "./Pages/FrontPage";
 import Home from "./Pages/Home";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
+import Post from "./Pages/Post";
 
 const  App = () => {
   const auth = getAuth();
@@ -35,6 +36,7 @@ const  App = () => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/post" element={<Post />} />
         </Routes>
         {loggedIn && (
           <Footer />
