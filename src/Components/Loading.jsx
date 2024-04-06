@@ -11,7 +11,7 @@ const Loading = () => {
         backgroundColor: "black"
         }}
     >
-    <ClipLoader color={white} size={50} />
+    <ClipLoader color="white" size={50} />
     </div>
   )
 }

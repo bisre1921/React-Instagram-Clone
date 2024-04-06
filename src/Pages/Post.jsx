@@ -2,10 +2,10 @@ import { useState } from "react";
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import {v4 as uuidv4} from "uuid";
-import { FaRegAddressCard } from "react-icons/fa";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
 import {toast} from "react-toastify";
+import Loading from "../Components/Loading";
 
 const Post  = () => {
     const auth = getAuth();
@@ -15,6 +15,8 @@ const Post  = () => {
         postCaption : "" ,
     });
     const {postImage , postCaption} = postData;
+
+    const [loading , setLoading] = useState();
 
     const handlePostDataFormInputChange = (event) => {
         if(event.target.files) {
@@ -34,6 +36,7 @@ const Post  = () => {
 
     const handlePostDataFormSubmit = async (event) => {
         event.preventDefault();
+        setLoading(true);
         try {
             const storePostImages = (image) => {
                 return new Promise((resolve , reject) => {
@@ -41,20 +44,20 @@ const Post  = () => {
                     const fileName = `${auth.currentUser.uid}-${image.name}-${uuidv4()}`
                     const storageRef = ref(storage , fileName);
                     const uploadTask = uploadBytesResumable(storageRef , image);
-
-                    uploadTask.on("state_changed" , (
-                        snapshot => {
-                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        }, 
-                        (error) => {
-                            reject(error);
-                        },
-                        () => {
-                            getDownloadURL(uploadTask.snapshot.ref).then((downloadORL) => {
-                                resolve(downloadORL);
-                            })
-                        }
-                    ))
+                    
+                    uploadTask.on("state_changed" ,
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    } , 
+                    (error) => {
+                        reject(error);
+                    },
+                    () => {
+                        getDownloadURL(uploadTask.snapshot.ref).then((downloadORL) => {
+                            resolve(downloadORL);
+                        })
+                    }
+                    )
                 })
             };
 
@@ -74,11 +77,16 @@ const Post  = () => {
             delete postDataCopy.postImage;
 
             const docRef = await addDoc(collection(db , "Posts") , postDataCopy);
+            setLoading(false);
             toast.success("Post submitted Successfully");
 
         } catch (error) {
-            console.log(error);
+            toast.error("cant submit your post, please try again");
         }
+    }
+
+    if(loading) {
+       return <Loading />
     }
 
 
