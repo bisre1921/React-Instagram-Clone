@@ -6,9 +6,11 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
 import {toast} from "react-toastify";
 import Loading from "../Components/Loading";
+import {useNavigate} from "react-router-dom";
 
 const Post  = () => {
     const auth = getAuth();
+    const navigate = useNavigate();
 
     const [postData , setPostData] = useState({
         postImage : "" , 
@@ -79,6 +81,7 @@ const Post  = () => {
             const docRef = await addDoc(collection(db , "Posts") , postDataCopy);
             setLoading(false);
             toast.success("Post submitted Successfully");
+            navigate("/home");
 
         } catch (error) {
             toast.error("cant submit your post, please try again");

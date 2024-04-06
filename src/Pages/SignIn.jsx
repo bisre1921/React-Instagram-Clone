@@ -1,11 +1,11 @@
 import { ImFacebook2 } from "react-icons/im";
 import { Link , useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {toast} from "react-toastify";
 import Loading from "../Components/Loading";
 
-const SignIn = () => {
+const SignIn = ({loggedIn}) => {
 
   const [signInFormData , setSignInFormData] = useState({
     email : "" ,
@@ -39,8 +39,14 @@ const SignIn = () => {
     }
   }
 
+  useEffect(() => {
+    if (loggedIn) {
+      navigate("/home");
+    }
+  }, [loggedIn, navigate]);
+
   if(loading) {
-    <Loading />
+    return <Loading />
   }
   return (
     <div className="bg-zinc-200 ">

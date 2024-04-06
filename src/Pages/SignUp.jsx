@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ImFacebook2 } from "react-icons/im";
 import { Link , useNavigate } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
@@ -7,7 +7,7 @@ import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import {toast} from "react-toastify";
 import Loading from "../Components/Loading";
 
-const SignUp = () => {
+const SignUp = ({loggedIn}) => {
   const [signUpFormData , setSignUpFormData] = useState({
     email : "" , 
     fullName : "" , 
@@ -52,9 +52,14 @@ const SignUp = () => {
     }
   }
 
+  useEffect(() => {
+    if (loggedIn) {
+      navigate("/home");
+    }
+  }, [loggedIn, navigate]);
  
   if(loading) {
-      <Loading />
+     return <Loading />
   } 
     return (
       <div className="bg-zinc-200 ">

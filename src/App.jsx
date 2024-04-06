@@ -31,11 +31,11 @@ const  App = () => {
       <Router>
         <Navbar loggedIn={loggedIn} />
         <Routes>
-          <Route path="/" element={<FrontPage />} />
+          <Route path="/" element={<FrontPage loggedIn={loggedIn} />} />
           <Route path="/home" element={<Home />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp loggedIn={loggedIn} />} />
+          <Route path="/sign-in" element={<SignIn loggedIn={loggedIn} />} />
           <Route path="/post" element={<Post />} />
         </Routes>
         {loggedIn && (

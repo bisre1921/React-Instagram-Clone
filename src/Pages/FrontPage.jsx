@@ -1,8 +1,15 @@
+import { useEffect } from "react";
 import home from "../assets/home.png";
 import { ImFacebook2 } from "react-icons/im";
-import {Link} from "react-router-dom";
+import {Link , useNavigate} from "react-router-dom";
 
-const FrontPage = () => {
+const FrontPage = (loggedIn) => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (loggedIn) {
+      navigate("/home");
+    }
+  }, [loggedIn, navigate]);
   return (
     <div className="bg-zinc-200 ">
       <div className="h-svh max-w-2xl mx-auto bg-black text-white pb-[23px] flex justify-between items-center">
