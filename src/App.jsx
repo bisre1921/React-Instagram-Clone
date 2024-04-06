@@ -11,6 +11,7 @@ import Home from "./Pages/Home";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 import Post from "./Pages/Post";
+import Profile from "./Pages/Profile";
 
 const  App = () => {
   const auth = getAuth();
@@ -37,6 +38,7 @@ const  App = () => {
           <Route path="/sign-up" element={<SignUp loggedIn={loggedIn} />} />
           <Route path="/sign-in" element={<SignIn loggedIn={loggedIn} />} />
           <Route path="/post" element={<Post />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         {loggedIn && (
           <Footer />

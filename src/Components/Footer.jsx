@@ -13,18 +13,22 @@ const Footer = () => {
 
     return (
         <div className="sticky bottom-0 w-full text-white bg-black flex justify-between  px-4 pb-1 max-w-2xl mx-auto">
-            <IoMdHome className="font-bold text-3xl" />
-            <FaSearch className="font-bold text-3xl" />
+            <IoMdHome className="font-bold text-3xl cursor-pointer" />
+            <FaSearch className="font-bold text-3xl cursor-pointer" />
             <FaRegPlusSquare 
-                className="font-bold text-3xl" 
+                className="font-bold text-3xl cursor-pointer" 
                 onClick={ () => navigate("/post") }
             />
-            <MdOutlineOndemandVideo className="font-bold text-3xl" />
-            <Avatar 
-                alt="john" 
-                src="https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg" 
-                style={{ width: '2rem', height: '2rem' }}
-            />
+            <MdOutlineOndemandVideo className="font-bold text-3xl cursor-pointer" />
+            <div onClick={() => navigate("/profile")}>
+                <Avatar 
+                    alt="john" 
+                    src="https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg" 
+                    style={{ width: '2rem', height: '2rem'  , cursor: 'pointer'}}
+                    
+                />
+            </div>
+           
         </div>
     )
 };

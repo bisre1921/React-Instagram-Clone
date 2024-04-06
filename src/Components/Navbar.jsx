@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom";
+import {Link , useLocation} from "react-router-dom";
 import SignIn from "../Pages/SignIn";
 import SignUp from "../Pages/SignUp";
 import { getAuth } from "firebase/auth";
@@ -9,8 +9,9 @@ import logo from "../assets/logo.png";
 
 const Navbar = ({loggedIn}) => {
     const auth = getAuth();
-     
-  return (
+    const location = useLocation();
+    const isProfilePage = location.pathname === "/profile";
+  return !isProfilePage ? (
     <div className="sticky top-0 z-50 bg-zinc-200 text-white">
         <nav className="max-w-2xl bg-black mx-auto flex justify-between items-center px-4">
             <div>
@@ -57,7 +58,7 @@ const Navbar = ({loggedIn}) => {
         </nav>
     </div>
     
-  )
+  ) : null;
 }
 
 export default Navbar
