@@ -25,7 +25,6 @@ const Home = () => {
                     });
                 });
                 setUsers(usersData);
-                console.log(usersData);
             } catch (error) {
                 console.log(error);
             }
@@ -43,7 +42,6 @@ const Home = () => {
                 });
                 postsData.sort((a, b) => b.data.timestamp - a.data.timestamp);
                 setPosts(postsData);
-                console.log(postsData);
             } catch (error) {
                 toast.error("Error Fetching Posts");
                 console.log(error);
