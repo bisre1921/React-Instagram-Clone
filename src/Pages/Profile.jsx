@@ -1,5 +1,5 @@
 import { getAuth } from "firebase/auth";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { useState, useSyncExternalStore } from "react";
 import { useEffect } from "react";
 import { db } from "../firebase";
@@ -21,6 +21,8 @@ const Profile = () => {
 
     const [users , setUsers] = useState(null);
     const [loading , setLoading] = useState(false);
+    const [userPosts , setUserPosts] = useState(null);
+    const [showPosts , setShowPosts] = useState(false);
 
     useEffect(() => {
         const fetchUser = async() => {
@@ -48,6 +50,35 @@ const Profile = () => {
         event.preventDefault();
         auth.signOut();
         navigate("/");
+    }
+
+        useEffect(() => {
+            const fetchUserProfile = async() => {
+                const userPostRef = collection(db , "Posts");
+                const q = query(userPostRef , where("userRef" , "==" , auth?.currentUser?.uid) , orderBy("timestamp" , "desc"));
+                const querySnap = await getDocs(q);
+                const userPosts = [];
+                querySnap.forEach((doc) => {
+                    return (
+                        userPosts.push({
+                            id: doc.id , 
+                            data: doc.data()
+                        })
+                    )
+                });
+                setUserPosts(userPosts);
+            };
+            fetchUserProfile();
+        })
+
+        
+        
+   
+    const handleViewPostButton = (event) => {
+        event.preventDefault();
+        setShowPosts((prevState) => {
+            setShowPosts(!prevState);
+        });
     }
     
     if(loading) {
@@ -110,12 +141,9 @@ const Profile = () => {
                     </div>
                     <div className="mt-2">
                         {users ? (() => {
-                            // Find the current user once
                             const currentUser = users.find((user) => user.id === auth?.currentUser?.uid);
-                            // Return JSX after finding the current user
                             return (
                                 <div>
-                                    {/* Render the current user's information */}
                                     <h1>{currentUser?.data.fullName}</h1>
                                 </div>
                             );
@@ -140,11 +168,46 @@ const Profile = () => {
                     </div>
             
                     <div className="flex justify-between mt-4 mx-8">
-                        <FaImages className="font-bold text-2xl" />
-                        <LuUserSquare2 className="font-bold text-2xl" />
-                        <HiSave className="font-bold text-2xl" />
+                        <FaImages className="font-bold text-2xl cursor-pointer" onClick={handleViewPostButton} />
+                        <LuUserSquare2 className="font-bold text-2xl cursor-pointer" />
+                        <HiSave className="font-bold text-2xl cursor-pointer" />
                     </div>
-
+                    {userPosts?.length == 0 && showPosts && (
+                        <div>
+                            <h1>
+                                Capture the moment with a friend
+                            </h1>
+                            <p>
+                                Create your first post
+                            </p>
+                        </div>
+                    )}
+                    {userPosts?.length > 0 && showPosts && (
+                        <div className="mt-4">
+                                {userPosts.map((userPost) => (
+                                    <div key={userPost.id}> 
+                                        <div>
+                                            {userPost.data.imageUrls.map((imageUrl, index) => ( 
+                                                <div key={index}>
+                                                    <img 
+                                                        key={index}
+                                                        src={imageUrl} 
+                                                        alt={`Post ${index}`}
+                                                        className="w-full h-80"
+                                                    />
+                                                </div>
+                                            ))}
+                                         </div>
+                                         <div>
+                                            <h3>
+                                                {userPost.data.postCaption}
+                                            </h3>
+                                         </div>
+                                    </div>
+                                    
+                                ))}
+                        </div>
+                    )}
 
                     <div>
                         <button onClick={handleSignOut}>
