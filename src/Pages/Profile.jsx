@@ -23,6 +23,9 @@ const Profile = () => {
     const [loading , setLoading] = useState(false);
     const [userPosts , setUserPosts] = useState(null);
     const [showPosts , setShowPosts] = useState(false);
+    const [isShowPostsActive , setIsShowPostsActive] = useState(false);
+    const [isShowTaggedActive , setIsShowTaggedActive] = useState(false);
+    const [isShowSavedActive , setIsShowSavedActive] = useState(false);
 
     useEffect(() => {
         const fetchUser = async() => {
@@ -79,6 +82,31 @@ const Profile = () => {
         setShowPosts((prevState) => {
             setShowPosts(!prevState);
         });
+        setIsShowPostsActive((prevState) => {
+            setIsShowPostsActive(!prevState);
+        });
+        setIsShowSavedActive(false);
+        setIsShowTaggedActive(false);
+    }
+
+    const handleViewTaggedButton = (event) => {
+        event.preventDefault();
+        setIsShowTaggedActive((prevState) => {
+            setIsShowTaggedActive(!prevState);
+        });
+        setShowPosts(false);
+        setIsShowPostsActive(false);
+        setIsShowSavedActive(false);
+    }
+
+    const handleViewSavedButton = (event) => {
+        event.preventDefault();
+        setIsShowSavedActive((prevState) => {
+            setIsShowSavedActive(!prevState);
+        });
+        setShowPosts(false);
+        setIsShowPostsActive(false);
+        setIsShowTaggedActive(false);
     }
     
     if(loading) {
@@ -168,9 +196,18 @@ const Profile = () => {
                     </div>
             
                     <div className="flex justify-between mt-4 mx-8">
-                        <FaImages className="font-bold text-2xl cursor-pointer" onClick={handleViewPostButton} />
-                        <LuUserSquare2 className="font-bold text-2xl cursor-pointer" />
-                        <HiSave className="font-bold text-2xl cursor-pointer" />
+                        <FaImages 
+                            className={`font-bold text-2xl cursor-pointer ${isShowPostsActive ? "border-b-2 pb-1  w-20" : ""}`} 
+                            onClick={handleViewPostButton} 
+                        />
+                        <LuUserSquare2 
+                            className={`font-bold text-2xl cursor-pointer ${isShowTaggedActive ? "border-b-2 pb-1  w-20" : ""}`}  
+                            onClick={handleViewTaggedButton}
+                        />
+                        <HiSave 
+                            className={`font-bold text-2xl cursor-pointer ${isShowSavedActive ? "border-b-2 pb-1  w-20" : ""}`} 
+                            onClick={handleViewSavedButton}
+                        />
                     </div>
                     {userPosts?.length == 0 && showPosts && (
                         <div>
@@ -183,7 +220,7 @@ const Profile = () => {
                         </div>
                     )}
                     {userPosts?.length > 0 && showPosts && (
-                        <div className="mt-4">
+                        <div className="mt-8">
                                 {userPosts.map((userPost) => (
                                     <div key={userPost.id}> 
                                         <div>
