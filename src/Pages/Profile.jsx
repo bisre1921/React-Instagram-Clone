@@ -87,7 +87,7 @@ const Profile = () => {
 
     return (
         <div className="bg-zinc-200">
-            <div className="h-lvh bg-black text-white max-w-2xl mx-auto px-4 md:px-40">
+            <div className="h-fit bg-black text-white max-w-2xl mx-auto px-4 md:px-40">
                     <nav className="flex justify-between items-center sticky top-0 z-50">
                         <div className="flex items-center gap-2">
                             <div>

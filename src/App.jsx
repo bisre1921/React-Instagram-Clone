@@ -12,6 +12,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 import Post from "./Pages/Post";
 import Profile from "./Pages/Profile";
+import PrivateRoute from "./Components/PrivateRoute";
 
 const  App = () => {
   const auth = getAuth();
@@ -33,12 +34,19 @@ const  App = () => {
         <Navbar loggedIn={loggedIn} />
         <Routes>
           <Route path="/" element={<FrontPage loggedIn={loggedIn} />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/home" element={<PrivateRoute />}>
+            <Route path="/home" element={<Home />} />
+          </Route>
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/sign-up" element={<SignUp loggedIn={loggedIn} />} />
           <Route path="/sign-in" element={<SignIn loggedIn={loggedIn} />} />
-          <Route path="/post" element={<Post />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/post" element={<PrivateRoute />}>
+            <Route path="/post" element={<Post />} />
+          </Route>
+          <Route path="/profile" element={<PrivateRoute />}>
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+          
         </Routes>
         {loggedIn && (
           <Footer />
