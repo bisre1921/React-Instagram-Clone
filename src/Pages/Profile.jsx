@@ -210,11 +210,11 @@ const Profile = () => {
                         />
                     </div>
                     {userPosts?.length == 0 && showPosts && (
-                        <div>
-                            <h1>
+                        <div className="mt-6">
+                            <h1 className="text-center text-lg font-semibold">
                                 Capture the moment with a friend
                             </h1>
-                            <p>
+                            <p className="text-center text-blue-700" onClick={() => navigate("/post")}>
                                 Create your first post
                             </p>
                         </div>
