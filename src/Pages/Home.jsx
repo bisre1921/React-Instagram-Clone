@@ -14,6 +14,7 @@ const Home = () => {
     const [posts , setPosts] = useState(null);
     const [users , setUsers] = useState(null);
     const [likedPosts, setLikedPosts] = useState({});
+    const [likedCount , setLikedCount] = useState(0);
     const [openComment , setOpenComment] = useState({ postId: null, isOpen: false });
     const auth = getAuth();
 
@@ -76,6 +77,11 @@ const Home = () => {
                 await updateDoc(postRef, {
                     likes: updatedLikes,
                 });
+
+                setLikedCount((prevLikedCount) => ({
+                    ...prevLikedCount,
+                    [postId]: updatedLikes,
+                }));
     
             } else {
             }
@@ -85,53 +91,39 @@ const Home = () => {
         }
     };
     
-    // useEffect(() => {
-    //     const fetchUserLikedPosts = async () => {
-    //         try {
-    //             if (auth.currentUser && auth.currentUser.uid) {
-    //                 const postsRef = collection(db, 'Posts');
-    //                 const postsSnapshot = await getDocs(postsRef);
+    useEffect(() => {
+        const fetchUserLikedPosts = async () => {
+            try {
+                const postsRef = collection(db, 'Posts');
+                const postsSnapshot = await getDocs(postsRef);
+                
+                const userLikedPosts = {};
+                const updatedLikedCount = {};
+    
+                postsSnapshot.forEach((doc) => {
+                    const postData = doc.data();
+                    updatedLikedCount[doc.id] = postData.likes;
                     
-    //                 const userLikedPosts = {};
-        
-    //                 postsSnapshot.forEach((doc) => {
-    //                     const postData = doc.data();
-                        
-    //                     console.log(postData.likes[auth.currentUser.uid])
-    //                     if (postData.likes && postData.likes[auth.currentUser.uid]) {
-    //                         userLikedPosts[doc.id] = true;
-    //                     }
-    //                 });
+                    if (postData.likes && postData.likes[auth.currentUser.uid]) {
+                        userLikedPosts[doc.id] = true;
+                    }
+                });
     
-    //                 setLikedPosts(userLikedPosts);
-    //             }
-    //         } catch (error) {
-    //             console.error('Error fetching user liked posts:', error);
-    //             toast.error('Failed to fetch liked posts. Please try again.');
-    //         }
-    //     };
+                setLikedPosts(userLikedPosts);
+                setLikedCount(updatedLikedCount);
+            } catch (error) {
+                console.error('Error fetching user liked posts:', error);
+                toast.error('Failed to fetch liked posts. Please try again.');
+            }
+        };
     
-    //     fetchUserLikedPosts();
-    // }, [auth.currentUser]);
+        fetchUserLikedPosts();
+    }, [auth.currentUser]);
     
     
-    
-
-    const updateLikesInDatabase = async (postId, likes) => {
-        try {
-            const postRef = doc(db, "Posts", postId);
-            await updateDoc(postRef, {
-                likes: likes,
-            });
-        } catch (error) {
-            console.error("Error updating likes in database:", error);
-            toast.error("Failed to update likes. Please try again.");
-        }
-    };
-
    
 
-
+   
     const handleOpenCommentClick = (postId) => {
         setOpenComment({ postId, isOpen: true });
     };
@@ -179,6 +171,14 @@ const Home = () => {
                                         onClick={() => handleOpenCommentClick(post.id)} 
                                     />
                                     {openComment.isOpen && openComment.postId === post.id && <CommentModal open={true} setOpenComment={setOpenComment} />}
+                                </div>
+                                <div className='mx-4'>
+                                    {likedCount[post.id] && (
+                                        <h1>
+                                            {likedCount[post.id]} {likedCount[post.id] > 1 ? "likes" : "like"}
+                                        </h1>
+                                    )}
+                                    
                                 </div>
                                 <div className="pl-4">
                                     <h2 className="">
