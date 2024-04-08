@@ -6,13 +6,14 @@ import { FaRegComment } from "react-icons/fa";
 import {toast} from "react-toastify"
 import { collection, doc, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import CommentModal from '../Components/CommentModal';
 
 const Home = () => {
     const [posts , setPosts] = useState(null);
     const [users , setUsers] = useState(null);
     const [likedPosts, setLikedPosts] = useState({});
+    const [openComment , setOpenComment] = useState({ postId: null, isOpen: false });
 
     useEffect(() => {
         const fetchUser = async() => {
@@ -59,7 +60,11 @@ const Home = () => {
             ...prevLikedPosts,
             [postId]: !prevLikedPosts[postId],
         }));
-    }
+    };
+
+    const handleOpenCommentClick = (postId) => {
+        setOpenComment({ postId, isOpen: true });
+    };
     
     return (
         <div className="bg-zinc-200">
@@ -100,8 +105,10 @@ const Home = () => {
                                     )}
                                     
                                     <FaRegComment 
-                                        className="font-bold text-xl cursor-pointer" 
+                                        className="font-bold text-xl cursor-pointer"
+                                        onClick={() => handleOpenCommentClick(post.id)} 
                                     />
+                                    {openComment.isOpen && openComment.postId === post.id && <CommentModal open={true} setOpenComment={setOpenComment} />}
                                 </div>
                                 <div className="pl-4">
                                     <h2 className="">
@@ -121,8 +128,6 @@ const Home = () => {
             </div>
         </div>
     );
-    
-    
 }
 
-export default Home
+export default Home;
