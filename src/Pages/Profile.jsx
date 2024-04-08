@@ -190,7 +190,7 @@ const Profile = () => {
                             Share profile
                         </button>
                         <button className="px-2 py-2 bg-stone-900 rounded">
-                            <FaAngleUp />
+                            <FaAngleDown />
                         </button>
 
                     </div>

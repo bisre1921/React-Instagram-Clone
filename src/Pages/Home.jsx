@@ -1,6 +1,7 @@
 import Avatar from '@mui/material/Avatar';
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoMdHeartEmpty } from "react-icons/io";
+import { FaHeart } from "react-icons/fa";
 import { FaRegComment } from "react-icons/fa";
 import {toast} from "react-toastify"
 import { collection, doc, getDocs } from 'firebase/firestore';
@@ -11,6 +12,7 @@ import { useState } from 'react';
 const Home = () => {
     const [posts , setPosts] = useState(null);
     const [users , setUsers] = useState(null);
+    const [likedPosts, setLikedPosts] = useState({});
 
     useEffect(() => {
         const fetchUser = async() => {
@@ -51,6 +53,13 @@ const Home = () => {
         fetchUser();
         fetchPost();
     } , []);
+
+    const handleLikeClick = (postId) => {
+        setLikedPosts((prevLikedPosts) => ({
+            ...prevLikedPosts,
+            [postId]: !prevLikedPosts[postId],
+        }));
+    }
     
     return (
         <div className="bg-zinc-200">
@@ -78,8 +87,21 @@ const Home = () => {
                                     />
                                 </div>
                                 <div className="flex gap-3 pt-2 pl-4">
-                                    <IoMdHeartEmpty className="font-bold text-xl" />
-                                    <FaRegComment className="font-bold text-xl" />
+                                    {likedPosts[post.id] ? (
+                                        <FaHeart 
+                                            className="font-bold text-xl text-red-700 cursor-pointer" 
+                                            onClick={() => handleLikeClick(post.id)}
+                                        />
+                                    ) : (
+                                        <IoMdHeartEmpty 
+                                            className={`font-bold text-xl cursor-pointer`}
+                                            onClick={() => handleLikeClick(post.id)}
+                                        />
+                                    )}
+                                    
+                                    <FaRegComment 
+                                        className="font-bold text-xl cursor-pointer" 
+                                    />
                                 </div>
                                 <div className="pl-4">
                                     <h2 className="">
