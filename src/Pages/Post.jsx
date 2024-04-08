@@ -15,6 +15,7 @@ const Post  = () => {
     const [postData , setPostData] = useState({
         postImage : "" , 
         postCaption : "" ,
+        likes: 0 ,
     });
     const {postImage , postCaption} = postData;
 

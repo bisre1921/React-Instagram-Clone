@@ -4,16 +4,18 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import { FaHeart } from "react-icons/fa";
 import { FaRegComment } from "react-icons/fa";
 import {toast} from "react-toastify"
-import { collection, doc, getDocs } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useEffect, useState } from 'react';
 import CommentModal from '../Components/CommentModal';
+import { getAuth } from 'firebase/auth';
 
 const Home = () => {
     const [posts , setPosts] = useState(null);
     const [users , setUsers] = useState(null);
     const [likedPosts, setLikedPosts] = useState({});
     const [openComment , setOpenComment] = useState({ postId: null, isOpen: false });
+    const auth = getAuth();
 
     useEffect(() => {
         const fetchUser = async() => {
@@ -55,12 +57,80 @@ const Home = () => {
         fetchPost();
     } , []);
 
-    const handleLikeClick = (postId) => {
-        setLikedPosts((prevLikedPosts) => ({
-            ...prevLikedPosts,
-            [postId]: !prevLikedPosts[postId],
-        }));
+    const handleLikeClick = async (postId) => {
+        try {
+            setLikedPosts((prevLikedPosts) => ({
+                ...prevLikedPosts,
+                [postId]: !prevLikedPosts[postId],
+            }));
+            // const updatedLikedPosts = { ...likedPosts };
+            // updatedLikedPosts[postId] = !updatedLikedPosts[postId];
+            // setLikedPosts(updatedLikedPosts);
+    
+            const postRef = doc(db, 'Posts', postId);
+            const postSnapshot = await getDoc(postRef);
+            if (postSnapshot.exists()) {
+                const postData = postSnapshot.data();
+                const updatedLikes = likedPosts[postId] ? postData.likes - 1 : postData.likes + 1;
+    
+                await updateDoc(postRef, {
+                    likes: updatedLikes,
+                });
+    
+            } else {
+            }
+        } catch (error) {
+            console.error('Error updating like:', error);
+            toast.error('Failed to update like. Please try again.');
+        }
     };
+    
+    // useEffect(() => {
+    //     const fetchUserLikedPosts = async () => {
+    //         try {
+    //             if (auth.currentUser && auth.currentUser.uid) {
+    //                 const postsRef = collection(db, 'Posts');
+    //                 const postsSnapshot = await getDocs(postsRef);
+                    
+    //                 const userLikedPosts = {};
+        
+    //                 postsSnapshot.forEach((doc) => {
+    //                     const postData = doc.data();
+                        
+    //                     console.log(postData.likes[auth.currentUser.uid])
+    //                     if (postData.likes && postData.likes[auth.currentUser.uid]) {
+    //                         userLikedPosts[doc.id] = true;
+    //                     }
+    //                 });
+    
+    //                 setLikedPosts(userLikedPosts);
+    //             }
+    //         } catch (error) {
+    //             console.error('Error fetching user liked posts:', error);
+    //             toast.error('Failed to fetch liked posts. Please try again.');
+    //         }
+    //     };
+    
+    //     fetchUserLikedPosts();
+    // }, [auth.currentUser]);
+    
+    
+    
+
+    const updateLikesInDatabase = async (postId, likes) => {
+        try {
+            const postRef = doc(db, "Posts", postId);
+            await updateDoc(postRef, {
+                likes: likes,
+            });
+        } catch (error) {
+            console.error("Error updating likes in database:", error);
+            toast.error("Failed to update likes. Please try again.");
+        }
+    };
+
+   
+
 
     const handleOpenCommentClick = (postId) => {
         setOpenComment({ postId, isOpen: true });
