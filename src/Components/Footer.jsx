@@ -5,13 +5,15 @@ import { MdOutlineOndemandVideo } from "react-icons/md";
 import { getAuth } from "firebase/auth";
 import Avatar from '@mui/material/Avatar';
 import Post from "../Pages/Post";
-import {useNavigate} from "react-router-dom";
+import {useNavigate , useLocation} from "react-router-dom";
 
 const Footer = () => {
     const auth = getAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+    const isEditProfilePage = location.pathname === "/edit-profile";
 
-    return (
+    return !isEditProfilePage ?  (
         <div className="sticky bottom-0 w-full text-white bg-black flex justify-between  px-4 pb-1 max-w-2xl mx-auto">
             <IoMdHome 
                 className="font-bold text-3xl cursor-pointer" 
@@ -33,7 +35,7 @@ const Footer = () => {
             </div>
            
         </div>
-    )
+    ) : null;
 };
 
 export default Footer;

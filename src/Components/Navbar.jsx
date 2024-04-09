@@ -11,7 +11,8 @@ const Navbar = ({loggedIn}) => {
     const auth = getAuth();
     const location = useLocation();
     const isProfilePage = location.pathname === "/profile";
-  return !isProfilePage ? (
+    const isEditProfilePage = location.pathname === "/edit-profile";
+  return !isProfilePage && !isEditProfilePage ? (
     <div className="sticky top-0 z-50 bg-zinc-200 text-white">
         <nav className="max-w-2xl bg-black mx-auto flex justify-between items-center px-4">
             <div>

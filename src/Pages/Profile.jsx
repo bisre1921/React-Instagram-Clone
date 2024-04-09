@@ -183,7 +183,10 @@ const Profile = () => {
                     </div>
 
                     <div className="flex items-center">
-                        <button className="px-8 py-1 bg-stone-900 rounded">
+                        <button 
+                            className="px-8 py-1 bg-stone-900 rounded"
+                            onClick={() => navigate("/edit-profile")}
+                        >
                             Edit profile
                         </button>
                         <button className="px-8 py-1 bg-stone-900 rounded mx-2">

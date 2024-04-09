@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import Post from "./Pages/Post";
 import Profile from "./Pages/Profile";
 import PrivateRoute from "./Components/PrivateRoute";
+import EditProfile from "./Pages/EditProfile";
 
 const  App = () => {
   const auth = getAuth();
@@ -45,6 +46,9 @@ const  App = () => {
           </Route>
           <Route path="/profile" element={<PrivateRoute />}>
             <Route path="/profile" element={<Profile />} />
+          </Route>
+          <Route path="/edit-profile" element={<PrivateRoute />}>
+            <Route path="/edit-profile" element={<EditProfile />} />
           </Route>
           
         </Routes>
