@@ -185,8 +185,15 @@ const Home = () => {
                                         <span className="font-semibold pr-1">{user.data.userName}</span> 
                                         {post.data.postCaption}
                                     </h2>
-                                    <p className="text-gray-300">
-                                        view all comments
+                                    <p 
+                                        className="text-gray-300 cursor-pointer"
+                                        onClick={() => handleOpenCommentClick(post.id)}
+                                    >
+                                        {post.data.comments && post.data.comments.length > 0 ? (
+                                            `view all ${post.data.comments.length} comments`
+                                        ) : (
+                                            "No comments"
+                                        )}
                                     </p>
                                 </div>
                             </div>
