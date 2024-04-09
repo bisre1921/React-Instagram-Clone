@@ -16,7 +16,12 @@ const Post  = () => {
         postImage : "" , 
         postCaption : "" ,
         likes: 0 ,
+        comments : [] ,
+       
     });
+
+    
+
     const {postImage , postCaption} = postData;
 
     const [loading , setLoading] = useState();

@@ -170,7 +170,7 @@ const Home = () => {
                                         className="font-bold text-xl cursor-pointer"
                                         onClick={() => handleOpenCommentClick(post.id)} 
                                     />
-                                    {openComment.isOpen && openComment.postId === post.id && <CommentModal open={true} setOpenComment={setOpenComment} />}
+                                    {openComment.isOpen && openComment.postId === post.id && <CommentModal open={true} setOpenComment={setOpenComment} postId={post.id} />}
                                 </div>
                                 <div className='mx-4'>
                                     {likedCount[post.id] && (

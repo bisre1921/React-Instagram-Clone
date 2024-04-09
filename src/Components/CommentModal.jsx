@@ -1,10 +1,18 @@
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TbLetterX } from "react-icons/tb";
 import Avatar from '@mui/material/Avatar';
+import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
+import { db } from '../firebase';
+import {toast} from "react-toastify"
+import { getAuth } from 'firebase/auth';
 
-const CommentModal = ({ open, setOpenComment }) => {
+const CommentModal = ({ open, setOpenComment , postId }) => {
+
+    const [comment , setComment] = useState("");
+    const [comments , setComments] = useState([]);
+    const auth = getAuth();
     
     const style = {
         position: 'absolute',
@@ -40,6 +48,51 @@ const CommentModal = ({ open, setOpenComment }) => {
         setOpenComment(false);
     };
 
+    const handleCommentInputChange = (event) => {
+        setComment(event.target.value);
+    };
+
+    const handleCommentSubmit = async(event) => {
+        event.preventDefault();
+        try {
+            const postRef = doc(db , "Posts" , postId);
+            const postSnapshot = await getDoc(postRef);
+
+            if(postSnapshot.exists()) {
+                const postData = postSnapshot.data();
+                const newComments = [...(postData.comments || []), { userName: auth.currentUser.displayName, message: comment }];
+                await updateDoc(postRef , {
+                    comments : newComments
+                });
+                setComments(newComments);
+                setComment("");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        
+    };
+
+    useEffect(() => {
+        const fetchComments = async () => {
+            try {
+                const postRef = doc(db, "Posts", postId);
+                const postSnapshot = await getDoc(postRef);
+    
+                if (postSnapshot.exists()) {
+                    const postData = postSnapshot.data();
+                    if (postData.comments) {
+                        setComments(postData.comments);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching comments:', error);
+            }
+        };
+        fetchComments();
+    }, [postId]);
+    
+
     return (
         <div className="max-w-2xl text-white">
             <Modal
@@ -53,51 +106,25 @@ const CommentModal = ({ open, setOpenComment }) => {
                             <h3>Comments</h3>
                         </nav>
                         <div className='mx-4 mt-2'>
-                            <div className='flex gap-3 mb-3'>
-                                <div>
-                                    <Avatar alt="leroy name" src="https://www.shutterstock.com/image-photo/young-handsome-man-beard-wearing-260nw-1768126784.jpg" />
+                            {comments.map((comment, index) => (
+                                <div key={index} className='flex gap-3 mb-3'>
+                                    <div>
+                                        <Avatar alt="user" src="" />
+                                    </div>
+                                    <div className=''>
+                                        <h1 >
+                                            <span className='font-semibold mr-2'>
+                                                {comment.userName} {/* Display user who made the comment */}
+                                            </span>
+                                            12h {/* Assuming comment timestamp */}
+                                        </h1>
+                                        <p>{comment.message}</p> {/* Display comment text */}
+                                    </div>
                                 </div>
-                                <div className=''>
-                                    <h1 >
-                                        <span className='font-semibold mr-2'>leroy__sane</span>
-                                        12h
-                                    </h1>
-                                    <p>
-                                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos, cupiditate fuga dolor unde blanditiis hic non natus, voluptates magni, officia tempore harum voluptatibus facere! Praesentium sequi quam tenetur molestias corrupti.
-                                    </p>
-                                </div>
-                            </div>
-                            <div className='flex gap-3 mb-3'>
-                                <div>
-                                    <Avatar alt="leroy name" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLAVy-V_Mdw0z3wFiwsczxQVaCFM4lmjt8vM9aW6LxYx8Qq9FkaoMgFepEb-erQpJXms4&usqp=CAU" />
-                                </div>
-                                <div className=''>
-                                    <h1 >
-                                        <span className='font-semibold mr-2'>albert_deniz</span>
-                                        18h
-                                    </h1>
-                                    <p>
-                                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos, cupiditate fuga dolor unde blanditiis hic non natus, voluptates magni, officia tempore harum voluptatibus facere! Praesentium sequi quam tenetur molestias corrupti.
-                                    </p>
-                                </div>
-                            </div>
-                            <div className='flex gap-3'>
-                                <div>
-                                    <Avatar alt="leroy name" src="https://www.shutterstock.com/image-photo/positive-happy-young-woman-wearing-260nw-1835831287.jpg" />
-                                </div>
-                                <div className=''>
-                                    <h1 >
-                                        <span className='font-semibold mr-2'>taylor_zahra</span>
-                                        23h
-                                    </h1>
-                                    <p>
-                                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos, cupiditate fuga dolor unde blanditiis hic non natus, voluptates magni, officia tempore harum voluptatibus facere! Praesentium sequi quam tenetur molestias corrupti.
-                                    </p>
-                                </div>
-                            </div>
+                            ))}
                         </div>
                         <div className='sticky bottom-0 mt-4'>
-                            <form action="" className='flex items-center gap-4'>
+                            <form onSubmit={handleCommentSubmit} className='flex items-center gap-4'>
                                 <div>
                                     <Avatar alt="user" src="" />
                                 </div>
@@ -105,6 +132,8 @@ const CommentModal = ({ open, setOpenComment }) => {
                                     <input 
                                         type="text" 
                                         placeholder='Add a comment...'
+                                        value={comment}
+                                        onChange={handleCommentInputChange}
                                         className='w-full px-2 py-2 bg-stone-800' 
                                     />
                                 </div>
