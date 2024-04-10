@@ -12,8 +12,10 @@ const Footer = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const isEditProfilePage = location.pathname === "/edit-profile";
-
-    return !isEditProfilePage ?  (
+    const isEditNamePage = location.pathname === "/edit-name";
+    const isEditUserNamePage = location.pathname === "/edit-userName";
+    const isEditBioPage = location.pathname === "/edit-bio";
+    return !isEditProfilePage && !isEditNamePage && !isEditUserNamePage && !isEditBioPage ?  (
         <div className="sticky bottom-0 w-full text-white bg-black flex justify-between  px-4 pb-1 max-w-2xl mx-auto">
             <IoMdHome 
                 className="font-bold text-3xl cursor-pointer" 
