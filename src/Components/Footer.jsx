@@ -6,16 +6,37 @@ import { getAuth } from "firebase/auth";
 import Avatar from '@mui/material/Avatar';
 import Post from "../Pages/Post";
 import {useNavigate , useLocation} from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
+import { useState } from "react";
 
 const Footer = () => {
     const auth = getAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const [profilePicture , setProfilePicture] = useState("");
     const isEditProfilePage = location.pathname === "/edit-profile";
-    const isEditNamePage = location.pathname === "/edit-name";
-    const isEditUserNamePage = location.pathname === "/edit-userName";
-    const isEditBioPage = location.pathname === "/edit-bio";
-    return !isEditProfilePage && !isEditNamePage && !isEditUserNamePage && !isEditBioPage ?  (
+
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const docRef = doc(db, "Users", auth?.currentUser?.uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    setProfilePicture(userData.profilePicture);
+                }
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        };
+        fetchUser();
+    })
+
+    
+    return !isEditProfilePage ?  (
         <div className="sticky bottom-0 w-full text-white bg-black flex justify-between  px-4 pb-1 max-w-2xl mx-auto">
             <IoMdHome 
                 className="font-bold text-3xl cursor-pointer" 
@@ -30,7 +51,7 @@ const Footer = () => {
             <div onClick={() => navigate("/profile")}>
                 <Avatar 
                     alt="john" 
-                    src="https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg" 
+                    src={profilePicture} 
                     style={{ width: '2rem', height: '2rem'  , cursor: 'pointer'}}
                     
                 />
