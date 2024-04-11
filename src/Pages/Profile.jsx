@@ -26,6 +26,7 @@ const Profile = () => {
     const [isShowPostsActive , setIsShowPostsActive] = useState(false);
     const [isShowTaggedActive , setIsShowTaggedActive] = useState(false);
     const [isShowSavedActive , setIsShowSavedActive] = useState(false);
+    const [linkCopiedText , setLinkCopiedText] = useState(false);
 
     useEffect(() => {
         const fetchUser = async() => {
@@ -108,6 +109,14 @@ const Profile = () => {
         setIsShowPostsActive(false);
         setIsShowTaggedActive(false);
     }
+
+    const handleShareProfile = () => {
+        const linkCopied = navigator.clipboard.writeText(window.location.href);
+        setLinkCopiedText(true);
+        setTimeout(() => {
+            setLinkCopiedText(false);
+        } , 2000);
+    }
     
     if(loading) {
         return <Loading />
@@ -183,20 +192,53 @@ const Profile = () => {
                     </div>
 
                     <div className="flex items-center">
-                        <button 
-                            className="px-8 py-1 bg-stone-900 rounded"
-                            onClick={() => navigate("/edit-profile")}
-                        >
-                            Edit profile
-                        </button>
-                        <button className="px-8 py-1 bg-stone-900 rounded mx-2">
-                            Share profile
-                        </button>
-                        <button className="px-2 py-2 bg-stone-900 rounded">
-                            <FaAngleDown />
-                        </button>
-
+                        {users ? (() => {
+                            const currentUser = users.find((user) => user.id === auth?.currentUser?.uid)
+                            if(currentUser) {
+                                return (
+                                    <div>
+                                        <button 
+                                            className="px-8 py-1 bg-stone-900 rounded"
+                                            onClick={() => navigate("/edit-profile")}
+                                        >
+                                            Edit profile
+                                        </button>
+                                        <button 
+                                            className="px-8 py-1 bg-stone-900 rounded mx-2"
+                                            onClick={handleShareProfile}
+                                        >
+                                            Share profile
+                                        </button>
+                                        {linkCopiedText && (
+                                            <p className="text-blue-700 absolute top-36 left-52">
+                                                link copied
+                                            </p>
+                                        )}
+                                        <button className="px-2 py-2 bg-stone-900 rounded">
+                                            <FaAngleDown />
+                                        </button>
+                                    </div>
+                                );
+                            } else {
+                                return (
+                                    <div>
+                                        <button 
+                                            className="px-8 py-1 bg-stone-900 rounded"
+                                        >
+                                            Follow
+                                        </button>
+                                        <button 
+                                            className="px-8 py-1 bg-stone-900 rounded mx-2"
+                                            onClick={handleShareProfile}
+                                        >
+                                            Message
+                                        </button>
+                                    </div>
+                                );
+                            }
+                        })() : null}
                     </div>
+
             
                     <div className="flex justify-between mt-4 mx-8">
                         <FaImages 
