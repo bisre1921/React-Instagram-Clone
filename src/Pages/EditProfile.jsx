@@ -94,9 +94,7 @@ const EditProfile = (props) => {
         try {
             setLoading(true);
             const docRef = doc(db, "Users", auth.currentUser.uid);
-            // Include profilePicture in the data to be updated
-            const dataToUpdate = { ...editProfileFormData, profilePicture: editProfileFormData.profilePicture };
-            await updateDoc(docRef, dataToUpdate);
+            await updateDoc(docRef, editProfileFormData);
             toast.success("Profile edited successfully");
         } catch (error) {
             console.error("Error updating profile:", error);
@@ -140,6 +138,7 @@ const EditProfile = (props) => {
                     });
                 }
             );
+            setViewFileUploadForm(false);
         } catch (error) {
             console.error("Error uploading profile picture:", error);
             toast.error("Failed to upload profile picture");
@@ -159,13 +158,13 @@ const EditProfile = (props) => {
         <div className="bg-black h-lvh text-white max-w-2xl mx-auto md:px-40">
             <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                    <TbLetterX />
+                    <TbLetterX className="cursor-pointer" onClick={() => navigate("/profile")} />
                     <h3>
                         Edit profile
                     </h3>
                 </div>
                 <div>
-                    <p className="text-blue-700" onClick={handleEditFormSubmit}>
+                    <p className="text-blue-700 cursor-pointer" onClick={handleEditFormSubmit}>
                         Done
                     </p>
                 </div>
