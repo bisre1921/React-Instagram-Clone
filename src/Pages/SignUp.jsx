@@ -48,6 +48,7 @@ const SignUp = ({loggedIn}) => {
       toast.success("User created successfully");
       navigate("/home");
     } catch (error) {
+      setLoading(false)
       toast.error("Error creating user. please try again");
     }
   }

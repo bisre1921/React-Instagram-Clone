@@ -1,17 +1,46 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import home from "../assets/home.png";
 import { ImFacebook2 } from "react-icons/im";
 import {Link , useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-const FrontPage = (loggedIn) => {
+const FrontPage = ({loggedIn}) => {
+  const [signInFormData , setSignInFormData] = useState({
+    email : "" ,
+    password : "" ,
+  });
+  const {email , password} = signInFormData;
+  const [loading , setLoading] = useState(false);
   const navigate = useNavigate();
+  const handleSignInFormInputChange = (event) => {
+    setSignInFormData((prevState) => ({
+      ...prevState , 
+      [event.target.id] : event.target.value
+  }));
+  };
+  const handleSignInFormSubmit = async(event) => {
+    event.preventDefault();
+    try {
+      setLoading(true);
+      const auth = getAuth();
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      if(userCredential.user) {
+        navigate("/home");
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error("Invalid email or password. Please check your credentials and try again.")
+    }
+  }
+  
   useEffect(() => {
-    if (loggedIn) {
-      navigate("/home");
+    if (!loggedIn) {
+      navigate("/");
     } 
-    // else {
-    //   navigate("/");
-    // }
+    else {
+      navigate("/home");
+    }
   }, [loggedIn, navigate]);
   return (
     <div className="bg-zinc-200 ">
@@ -29,15 +58,19 @@ const FrontPage = (loggedIn) => {
             <p className="mb-4 text-center font-bold text-2xl">
               instagram
             </p>
-            <form>
+            <form onSubmit={handleSignInFormSubmit}>
               <input 
                 type="text"
                 placeholder="email..." 
+                id="email"
+                onChange={handleSignInFormInputChange}
                 className="p-2 rounded mb-2 w-full mr-4 text-black"
               />
               <input 
                 type="password"
                 placeholder="password..." 
+                id="password"
+                onChange={handleSignInFormInputChange}
                 className="p-2 rounded w-full px-4 text-black mb-4"
               />
               <div className="flex justify-center items-center">
