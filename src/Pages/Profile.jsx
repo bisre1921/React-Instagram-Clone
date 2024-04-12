@@ -14,6 +14,8 @@ import { FaAngleUp } from "react-icons/fa";
 import { FaImages } from "react-icons/fa";
 import { LuUserSquare2 } from "react-icons/lu";
 import { HiSave } from "react-icons/hi";
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
 
 const Profile = () => {
     const auth = getAuth();
@@ -27,6 +29,41 @@ const Profile = () => {
     const [isShowTaggedActive , setIsShowTaggedActive] = useState(false);
     const [isShowSavedActive , setIsShowSavedActive] = useState(false);
     const [linkCopiedText , setLinkCopiedText] = useState(false);
+    const [viewSignOut , setViewSignOut] = useState(false);
+
+
+
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: "50%",
+        bottom: "0%",
+        transform: 'translate(-50%, -50%)',
+        width: "calc(100vw - 80%)",
+        maxWidth: '40%',
+        height: 'calc(100vh - 80%)',
+        overflowY: 'auto',
+        bgcolor: "rgb(28 25 23)",
+        color: "white",
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 0,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        '@media (max-width: 768px)': {
+            maxWidth: '100%',
+        },
+        '@media (min-width: 769px) and (max-width: 1024px)': {
+            maxWidth: '80%',
+        },
+        '@media (min-width: 1025px) and (max-width: 1280px)': {
+            maxWidth: '50%',
+        },
+    };
+
+
+
+
 
     useEffect(() => {
         const fetchUser = async() => {
@@ -116,6 +153,10 @@ const Profile = () => {
         setTimeout(() => {
             setLinkCopiedText(false);
         } , 2000);
+    };
+
+    const handleViewSignOut = (event) => {
+        setViewSignOut(true);
     }
     
     if(loading) {
@@ -143,7 +184,24 @@ const Profile = () => {
                                 )}
                             </div>
                             <div>
-                                <FaAngleDown className="font-normal text-xl" />
+                                <FaAngleDown 
+                                    className="font-normal text-xl cursor-pointer"
+                                    onClick={handleViewSignOut} 
+                                />
+                                {viewSignOut && (
+                                    <Modal
+                                        open={viewSignOut}
+                                        onClose={() => setViewSignOut(false)} // Close modal via parent component
+                                    >
+                                        <Box sx={style}>
+                                            <div className="flex flex-col items-center mt-10">
+                                                    <button className="border px-10 py-2 rounded" onClick={handleSignOut}>
+                                                        sign out
+                                                    </button>
+                                            </div>
+                                        </Box>
+                                    </Modal>
+                                )}
                             </div>
                         </div>
                         <div className="flex items-center gap-4">
@@ -280,7 +338,7 @@ const Profile = () => {
                     {userPosts?.length > 0 && showPosts && (
                         <div className="mt-8">
                                 {userPosts.map((userPost) => (
-                                    <div key={userPost.id} className="mb-4"> 
+                                    <div key={userPost.id} className="pb-4"> 
                                         <div>
                                             {userPost.data.imageUrls.map((imageUrl, index) => ( 
                                                 <div key={index}>
@@ -304,11 +362,7 @@ const Profile = () => {
                         </div>
                     )}
 
-                    <div>
-                        <button onClick={handleSignOut}>
-                            sign out
-                        </button>
-                    </div>
+                    
 
             </div>
             
