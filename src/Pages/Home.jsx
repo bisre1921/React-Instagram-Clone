@@ -1,3 +1,4 @@
+import Moment from 'react-moment';
 import Avatar from '@mui/material/Avatar';
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoMdHeartEmpty } from "react-icons/io";
@@ -142,7 +143,11 @@ const Home = () => {
                                         <h3>{user.data.userName}</h3>
                                     </div>
                                     <div className="flex items-center gap-2 pr-4">
-                                        <h3>12h</h3>
+                                        <h3>
+                                            <Moment fromNow ago>
+                                                {post?.data?.timestamp?.toDate()}
+                                            </Moment>
+                                        </h3>
                                         <h3><BsThreeDotsVertical /></h3>
                                     </div>
                                 </div>

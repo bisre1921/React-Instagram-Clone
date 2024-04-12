@@ -14,6 +14,8 @@ import Post from "./Pages/Post";
 import Profile from "./Pages/Profile";
 import PrivateRoute from "./Components/PrivateRoute";
 import EditProfile from "./Pages/EditProfile";
+import Moment from 'react-moment';
+import 'moment-timezone';
 
 const  App = () => {
   const auth = getAuth();
