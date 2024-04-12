@@ -52,9 +52,11 @@ const Profile = () => {
         borderTopRightRadius: 20,
         '@media (max-width: 768px)': {
             maxWidth: '100%',
+            width: "calc(100vw - 50%)",
         },
         '@media (min-width: 769px) and (max-width: 1024px)': {
             maxWidth: '80%',
+            height: 'calc(100vh - 85%)',
         },
         '@media (min-width: 1025px) and (max-width: 1280px)': {
             maxWidth: '50%',
