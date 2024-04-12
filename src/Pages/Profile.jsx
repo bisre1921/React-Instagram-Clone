@@ -128,9 +128,19 @@ const Profile = () => {
                     <nav className="flex justify-between items-center sticky top-0 z-50">
                         <div className="flex items-center gap-2">
                             <div>
-                                <h1 className="font-semibold text-lg">
-                                   {auth?.currentUser?.displayName}
-                                </h1>
+                                {users ? (() => {
+                                const currentUser = users.find((user) => user.id === auth?.currentUser?.uid);
+                                return (
+                                    <h1 className="font-semibold text-lg">
+                                        {currentUser?.data.userName}
+                                    </h1>
+                                )
+                                })
+                                (): (
+                                    <h1>
+                                        {auth.currentUser.displayName}
+                                    </h1>
+                                )}
                             </div>
                             <div>
                                 <FaAngleDown className="font-normal text-xl" />
@@ -143,11 +153,14 @@ const Profile = () => {
                         </div>
                     </nav>
                     <div className="mt-4 flex justify-between items-center">
+                        
                         <Avatar 
                             alt="john" 
-                            src="https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg" 
-                            style={{ width: '6rem', height: '6rem'  , cursor: 'pointer'}}
-                            
+                            src={users ? (() => {
+                                const currentUser = users.find((user) => user.id === auth?.currentUser?.uid);
+                                return currentUser?.data.profilePicture;
+                            })() : ""} 
+                            style={{ width: '6rem', height: '6rem', cursor: 'pointer'}}
                         />
                         <div className="flex items-center gap-6">
                             <div className="flex flex-col items-center">
@@ -196,7 +209,7 @@ const Profile = () => {
                             const currentUser = users.find((user) => user.id === auth?.currentUser?.uid)
                             if(currentUser) {
                                 return (
-                                    <div>
+                                    <div className="relative">
                                         <button 
                                             className="px-8 py-1 bg-stone-900 rounded"
                                             onClick={() => navigate("/edit-profile")}
@@ -210,7 +223,7 @@ const Profile = () => {
                                             Share profile
                                         </button>
                                         {linkCopiedText && (
-                                            <p className="text-blue-700 absolute top-36 left-52">
+                                            <p className="text-blue-700 absolute bottom-8 left-48 ">
                                                 link copied
                                             </p>
                                         )}
