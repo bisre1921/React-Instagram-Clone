@@ -37,7 +37,7 @@ const Footer = () => {
 
     
     return !isEditProfilePage ?  (
-        <div className="sticky bottom-0 w-full text-white bg-black flex justify-between  px-4 pb-1 max-w-2xl mx-auto">
+        <div className="sticky bottom-0 w-full text-white bg-black flex justify-between  px-4 pb-1 max-w-2xl mx-auto md:px-40">
             <IoMdHome 
                 className="font-bold text-3xl cursor-pointer" 
                 onClick={() => navigate("/home")}

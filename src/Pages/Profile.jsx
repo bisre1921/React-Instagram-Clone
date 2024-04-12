@@ -124,7 +124,7 @@ const Profile = () => {
 
     return (
         <div className="bg-zinc-200">
-            <div className="h-fit bg-black text-white max-w-2xl mx-auto px-4 md:px-40">
+            <div className="min-h-lvh bg-black text-white max-w-2xl mx-auto px-4 md:px-40">
                     <nav className="flex justify-between items-center sticky top-0 z-50">
                         <div className="flex items-center gap-2">
                             <div>
@@ -280,7 +280,7 @@ const Profile = () => {
                     {userPosts?.length > 0 && showPosts && (
                         <div className="mt-8">
                                 {userPosts.map((userPost) => (
-                                    <div key={userPost.id}> 
+                                    <div key={userPost.id} className="mb-4"> 
                                         <div>
                                             {userPost.data.imageUrls.map((imageUrl, index) => ( 
                                                 <div key={index}>

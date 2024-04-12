@@ -131,7 +131,7 @@ const Home = () => {
     
     return (
         <div className="bg-zinc-200">
-            <div className="max-w-2xl mx-auto pt-10 bg-black text-white h-fit">
+            <div className="max-w-2xl mx-auto pt-10 bg-black text-white min-h-lvh">
                 {posts ? (
                     posts.map((post) => {
                         const user = users.find((user) => user.id === post.data.userRef);
